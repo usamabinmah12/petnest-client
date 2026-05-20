@@ -9,7 +9,7 @@ const DashboardPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen container mx-auto">
 
       <div className="w-64 p-5 border-r">
 

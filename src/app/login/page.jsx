@@ -68,10 +68,10 @@ const LoginPage = () => {
                         <Sparkles className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                        Create Account
+                        Login
                     </h1>
                     <p className="text-white/60 mt-2 text-sm">
-                        Join us and start your journey
+                        welcome Back
                     </p>
                 </div>
 

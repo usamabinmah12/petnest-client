@@ -17,7 +17,7 @@ const Navbar = () => {
                  <Dropdown>
       <Dropdown.Trigger className="rounded-2xl p-2">
         <Avatar>
-           <Button >User</Button>
+           <span>User</span>
           
         </Avatar>
       </Dropdown.Trigger>

@@ -3,8 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import AddPetModal from "@/components/AddPetModal";
+import { useSession } from "@/lib/auth-client";
 
 const DashboardPage = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,8 +21,6 @@ const DashboardPage = () => {
         </h1>
 
         <div className="flex flex-col gap-4">
-
-          
 
           <button
             onClick={() => setIsOpen(true)}
@@ -39,15 +40,21 @@ const DashboardPage = () => {
         </div>
 
       </div>
+
       <div className="flex-1 p-6">
         <h2 className="text-3xl font-bold">
           Welcome to Dashboard
         </h2>
+
+        <p className="text-gray-500 mt-2">
+          {user?.email ? `Logged in as ${user.email}` : "Loading user..."}
+        </p>
       </div>
+
       <AddPetModal
         isOpen={isOpen}
         onOpenChange={setIsOpen}
-        userEmail="user@gmail.com"
+        userEmail={user?.email || ""}
       />
 
     </div>

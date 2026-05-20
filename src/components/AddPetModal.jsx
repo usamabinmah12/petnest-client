@@ -14,6 +14,7 @@ import {
   ListBox,
   TextArea,
 } from "@heroui/react";
+import toast from "react-hot-toast";
 
 const speciesOptions = ["Dog", "Cat", "Bird", "Rabbit", "Fish", "Other"];
 const genderOptions = ["Male", "Female"];
@@ -36,7 +37,7 @@ export default function AddPetModal({ isOpen, onOpenChange, userEmail }) {
         )
         const data = await res.json();
         if(data) {
-            console.log("data added to mongodb");
+            toast.success("data added to mongodb");
         }
         else {
             console.log("error occured");

@@ -34,7 +34,7 @@ const Pet = ({ pet }) => {
           <div className="flex gap-3 mt-2">
 
             <Link href={`/pets/${pet._id}`}>
-              <Button>
+              <Button variant="danger-soft">
                 See details
               </Button>
             </Link>
@@ -42,7 +42,7 @@ const Pet = ({ pet }) => {
             <Link href={``}>
               
               <Button color="primary">
-                Book Now
+                Adopt Now
               </Button>
             </Link>
 

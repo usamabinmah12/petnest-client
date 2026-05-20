@@ -3,12 +3,9 @@
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-const Peti = ({ pet }) => {
-
-  const router = useRouter();
+const Peti = ({ pet, onDelete }) => {
 
   const handleDelete = async () => {
 
@@ -24,8 +21,7 @@ const Peti = ({ pet }) => {
 
     if (data.deletedCount > 0) {
       toast.success("Deleted successfully");
-      router.push("/dashboard/my-pets");
-      router.refresh();
+      if (onDelete) onDelete();
     }
   };
 
@@ -71,7 +67,7 @@ const Peti = ({ pet }) => {
               </Button>
             </Link>
 
-            <Button onClick={handleDelete} color="danger">
+            <Button onClick={handleDelete} variant="danger">
               Delete
             </Button>
 

@@ -2,7 +2,7 @@ import { Button, Card } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 
-const Pet = ({ pet }) => {
+const Peti = ({ pet }) => {
   return (
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-sm flex flex-col items-center text-center p-6 gap-4">
@@ -39,10 +39,10 @@ const Pet = ({ pet }) => {
               </Button>
             </Link>
 
-            <Link href={``}>
+            <Link href={`/update/${pet._id}`}>
               
               <Button color="primary">
-                Book Now
+                  Update
               </Button>
             </Link>
 
@@ -55,4 +55,4 @@ const Pet = ({ pet }) => {
   );
 };
 
-export default Pet;
+export default Peti;

@@ -1,8 +1,34 @@
+"use client";
+
 import { Button, Card } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const Peti = ({ pet }) => {
+
+  const router = useRouter();
+
+  const handleDelete = async () => {
+
+    const confirmDelete = confirm("Are you sure to delete this pet?");
+
+    if (!confirmDelete) return;
+
+    const res = await fetch(`http://localhost:5000/pets/${pet._id}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (data.deletedCount > 0) {
+      toast.success("Deleted successfully");
+      router.push("/dashboard/my-pets");
+      router.refresh();
+    }
+  };
+
   return (
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-sm flex flex-col items-center text-center p-6 gap-4">
@@ -34,17 +60,20 @@ const Peti = ({ pet }) => {
           <div className="flex gap-3 mt-2">
 
             <Link href={`/pets/${pet._id}`}>
-              <Button>
+              <Button variant="secondary">
                 See details
               </Button>
             </Link>
 
             <Link href={`/update/${pet._id}`}>
-              
               <Button color="primary">
-                  Update
+                Edit
               </Button>
             </Link>
+
+            <Button onClick={handleDelete} color="danger">
+              Delete
+            </Button>
 
           </div>
 

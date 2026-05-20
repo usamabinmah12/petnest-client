@@ -1,8 +1,13 @@
+'use client'
+import { useSession } from "@/lib/auth-client";
 import { ArrowRightFromSquare } from "@gravity-ui/icons";
 import { Avatar, Dropdown, Label } from "@heroui/react";
 import Link from "next/link";
 
 const Navbar = () => {
+  // const session  = useSession();
+  // const User = session?.user;
+  // console.log(User , "user");
   return (
     <nav className="w-full bg-white border-b shadow-sm">
       <div className="container mx-auto flex items-center justify-between px-6 py-3">
@@ -42,7 +47,7 @@ const Navbar = () => {
 
               <Dropdown.Item id="logout" textValue="Logout" variant="danger">
                 <div className="flex items-center justify-between w-full">
-                  <Label>Logout</Label>
+                  <Link href={'/signup'}> <Label>SignUp</Label> </Link>
                   <ArrowRightFromSquare className="size-4 text-red-500" />
                 </div>
               </Dropdown.Item>

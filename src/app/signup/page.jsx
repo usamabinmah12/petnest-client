@@ -7,6 +7,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, User, Mail, Lock, Camera, Sparkles, ArrowRight } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { FaGoogle } from "react-icons/fa";
 
 
 const SignUp = () => {
@@ -58,7 +59,11 @@ const SignUp = () => {
             setIsLoading(false);
         }
     }
-
+   const handleGoogle = async () => {
+    const data = await authClient.signIn.social({
+        provider: "google",
+    });
+};
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 relative overflow-hidden">
             
@@ -199,6 +204,13 @@ const SignUp = () => {
                         Log in
                     </Link>
                 </p>
+                 <div className="relative flex justify-center text-xs">
+                                        <span className="px-2 bg-transparent text-white/40">or</span>
+                               </div>
+                               <div className="flex items-center justify-center">
+                                <Button variant="danger-soft" onClick={handleGoogle} > <FaGoogle></FaGoogle> SignUp With Google</Button>
+                                 
+                  </div>
             </Card>
         </div>
     );

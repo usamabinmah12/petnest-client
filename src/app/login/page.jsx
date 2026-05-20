@@ -7,6 +7,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, User, Mail, Lock, Camera, Sparkles, ArrowRight } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { FaGoogle } from "react-icons/fa";
 
 
 const LoginPage = () => {
@@ -51,6 +52,11 @@ const LoginPage = () => {
             setIsLoading(false);
         }
     }
+    const handleGoogle = async () => {
+    const data = await authClient.signIn.social({
+        provider: "google",
+    });
+};
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 relative overflow-hidden">
@@ -127,7 +133,7 @@ const LoginPage = () => {
                         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-2 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg disabled:opacity-50"
                         endContent={!isLoading && <ArrowRight className="w-4 h-4" />}
                     >
-                        {isLoading ? "Creating Account..." : "Log In"}
+                        {isLoading ? "Logging into Account..." : "Log In"}
                     </Button>
                 </Form>
 
@@ -146,6 +152,13 @@ const LoginPage = () => {
                         SignUp
                     </Link>
                 </p>
+                <div className="relative flex justify-center text-xs">
+                        <span className="px-2 bg-transparent text-white/40">or</span>
+               </div>
+               <div className="flex items-center justify-center">
+                <Button variant="danger-soft" onClick={handleGoogle} > <FaGoogle></FaGoogle> Login With Google</Button>
+                 
+               </div>
             </Card>
         </div>
     );

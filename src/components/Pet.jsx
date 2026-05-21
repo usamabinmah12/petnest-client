@@ -5,13 +5,13 @@ import { Button, Card } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import NoUser from "./NoUser";
 
 const Pet = ({ pet }) => {
   const [isAdopted, setIsAdopted] = useState(false);
-  
+  const session = useSession();
+  const user = session?.user;
   useEffect(() => {
-    
+  
     if (pet?.isAdopted === true || pet?.adoptionStatus === "adopted") {
       setIsAdopted(true);
     }

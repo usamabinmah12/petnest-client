@@ -59,7 +59,7 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center gap-6 text-gray-700 font-medium">
-          <Link href="/pets" className="hover:text-pink-500 transition-colors">
+          <Link href="/pets" className="hover:text-pink-500 transition-colors text-2xl">
             All Pets
           </Link>
         </div>

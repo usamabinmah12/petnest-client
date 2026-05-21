@@ -1,5 +1,8 @@
 import Banner from "@/components/Banner";
 import Pet from "@/components/Pet";
+import PetCareTips from "@/components/PetCareTips";
+import SuccessStories from "@/components/SuccessStories";
+import WhyAdoptPets from "@/components/WhyAdoptPets";
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,6 +44,9 @@ export default async function Home() {
         <div className="flex items-center justify-center">
           <Link href={"/pets"}> <Button>See all Pets</Button></Link>
         </div>
+        <WhyAdoptPets></WhyAdoptPets>
+        <SuccessStories></SuccessStories>
+        <PetCareTips></PetCareTips>
         
     </div>
   );

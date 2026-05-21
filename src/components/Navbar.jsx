@@ -3,6 +3,7 @@
 import { useSession } from "@/lib/auth-client";
 import { ArrowRightFromSquare } from "@gravity-ui/icons";
 import { Avatar, Dropdown, Label } from "@heroui/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -66,8 +67,9 @@ const Navbar = () => {
         <Dropdown>
           
           <Dropdown.Trigger>
-            <div className="font-bold">State</div>
+            <div className="font-bold">User</div>
             <Avatar 
+         
               name={isLoggedIn ? user.name : "User"} 
               className="cursor-pointer hover:opacity-80 transition-opacity" 
             />

@@ -80,8 +80,15 @@ const IdPage = async ({ params }) => {
           Owner: {pet.ownerEmail}
         </div>
 
-        <Button color="primary" className="w-full md:w-1/2">
-          Adopt Now
+        <Button 
+          color="primary" 
+          className="w-full md:w-1/2" 
+          disabled={pet.isAdopted}
+          isDisabled={pet.isAdopted}
+          as="a"
+          href={pet.isAdopted ? undefined : `/adopt/${pet._id}`}
+        >
+          {pet.isAdopted ? "Already Adopted" : "Adopt Now"}
         </Button>
 
       </Card>

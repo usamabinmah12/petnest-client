@@ -13,7 +13,7 @@ const Peti = ({ pet, onDelete }) => {
 
     if (!confirmDelete) return;
 
-    const res = await fetch(`http://localhost:5000/pets/${pet._id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${pet._id}`, {
       method: "DELETE",
     });
 
@@ -51,6 +51,11 @@ const Peti = ({ pet, onDelete }) => {
           <div className="text-sm">
             <p className="font-medium">{pet.breed}</p>
             <p className="text-gray-500">{pet.location}</p>
+            {pet.isAdopted && pet.adoptedBy && (
+              <p className="text-green-600 font-semibold mt-1">
+                Adopted by: {pet.adoptedBy}
+              </p>
+            )}
           </div>
 
           <div className="flex gap-3 mt-2">

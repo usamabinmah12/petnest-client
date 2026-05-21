@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-    const res = await fetch('http://localhost:5000/pets');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets`);
     const allPets = await res.json();
     
   return (

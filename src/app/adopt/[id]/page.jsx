@@ -11,17 +11,14 @@ export default function AdoptPage() {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
-  const USER = session?.user;
+
+  const user = session?.user;
+
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-  });
 
   const [formData, setFormData] = useState({
     pickupDate: "",
@@ -29,24 +26,6 @@ export default function AdoptPage() {
   });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser({
-          name: userData.name || "",
-          email: userData.email || "",
-        });
-      } catch (e) {
-        console.error("Error parsing user data:", e);
-      }
-    } else {
-      setUser({
-        name: "Test User",
-        email: "test@example.com",
-      });
-    }
-
     if (params?.id) {
       fetchPetDetails();
     }
@@ -54,10 +33,14 @@ export default function AdoptPage() {
 
   const fetchPetDetails = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/pets/${params.id}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/pets/${params.id}`
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
       setPet(data);
     } catch (error) {
@@ -87,28 +70,30 @@ export default function AdoptPage() {
     }
 
     try {
-      const apiUrl = "http://localhost:5000";
-      
-      const updateResponse = await fetch(`${apiUrl}/update/${pet._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          isAdopted: true,
-          adoptionStatus: "adopted",
-          adoptedBy: user.email,
-          adoptedAt: new Date().toISOString(),
-        }),
-      });
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+      const updateResponse = await fetch(
+        `${apiUrl}/update/${pet._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            adoptedBy: user.email,
+            pickupDate: formData.pickupDate,
+            message: formData.message,
+          }),
+        }
+      );
 
       const updateResult = await updateResponse.json();
-      
-      if (!updateResponse.ok || !updateResult.success) {
-        throw new Error(updateResult.error || "Failed to update pet status");
-      }
 
-      console.log("Pet status updated successfully:", updateResult);
+      if (!updateResponse.ok || !updateResult.success) {
+        throw new Error(
+          updateResult.error || "Failed to update pet status"
+        );
+      }
 
       const adoptionRequest = {
         petId: pet._id,
@@ -131,11 +116,10 @@ export default function AdoptPage() {
       });
 
       setSuccess(true);
-      
+
       setTimeout(() => {
         router.push("/pets");
       }, 2000);
-      
     } catch (err) {
       console.error("Adoption error:", err);
       setSubmitError(err.message);
@@ -160,7 +144,6 @@ export default function AdoptPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">Pet not found</p>
-          <p className="text-sm text-gray-500 mb-4">Make sure backend is running on port 5000</p>
           <Button onClick={() => router.push("/pets")} className="mt-4">
             Back to Pets
           </Button>
@@ -184,132 +167,102 @@ export default function AdoptPage() {
     );
   }
 
+  if (!user) {
+    return <NoUser />;
+  }
+
   return (
-    <div className="div">
-      {USER ? (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-          <div className="max-w-5xl w-full bg-white rounded-2xl shadow-lg grid md:grid-cols-2 overflow-hidden">
-            <div className="p-6 bg-gray-50">
-              {pet.image ? (
-                <Image
-                  src={pet.image}
-                  alt={pet.petName || "Pet"}
-                  width={500}
-                  height={400}
-                  className="rounded-xl object-cover w-full h-64"
-                  onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/500x400?text=No+Image";
-                  }}
-                />
-              ) : (
-                <div className="w-full h-64 bg-gray-200 rounded-xl flex items-center justify-center">
-                  <span className="text-gray-400">No Image Available</span>
-                </div>
-              )}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="max-w-5xl w-full bg-white rounded-2xl shadow-lg grid md:grid-cols-2 overflow-hidden">
 
-              <h1 className="text-3xl font-bold mt-4">{pet.petName || "Unknown Pet"}</h1>
-              <p className="text-gray-600 mt-2">Breed: {pet.breed || "Not specified"}</p>
-              <p className="text-gray-600">Age: {pet.age || "Unknown"} years</p>
-              <p className="text-gray-600">Owner: {pet.ownerEmail || "Not specified"}</p>
-            </div>
+        <div className="p-6 bg-gray-50">
+          <Image
+            src={pet.image || "https://via.placeholder.com/500x400?text=No+Image"}
+            alt={pet.petName || "Pet"}
+            width={500}
+            height={400}
+            className="rounded-xl object-cover w-full h-64"
+          />
 
-            <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Adoption Form</h2>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pet Name
-                  </label>
-                  <input
-                    value={pet.petName || ""}
-                    readOnly
-                    className="w-full p-3 border rounded-lg bg-gray-100"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pet Owner Email
-                  </label>
-                  <input
-                    value={pet.ownerEmail || ""}
-                    readOnly
-                    className="w-full p-3 border rounded-lg bg-gray-100"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Your Name
-                  </label>
-                  <input
-                    value={user.name || "Guest"}
-                    readOnly
-                    className="w-full p-3 border rounded-lg bg-gray-100"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Your Email
-                  </label>
-                  <input
-                    value={user.email || "guest@example.com"}
-                    readOnly
-                    className="w-full p-3 border rounded-lg bg-gray-100"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pickup Date <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    name="pickupDate"
-                    value={formData.pickupDate}
-                    onChange={handleChange}
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    required
-                    min={new Date().toISOString().split("T")[0]}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Message (Optional)
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Tell us why you'd like to adopt this pet..."
-                    rows="3"
-                  />
-                </div>
-
-                {submitError && (
-                  <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-                    {submitError}
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full mt-6 bg-gradient-to-r from-green-600 to-blue-600 text-white font-bold p-3 rounded-lg hover:scale-[1.02] transition disabled:opacity-50"
-                >
-                  {submitting ? "Submitting..." : "Confirm Adoption"}
-                </Button>
-              </form>
-            </div>
-          </div>
+          <h1 className="text-3xl font-bold mt-4">
+            {pet.petName || "Unknown Pet"}
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Breed: {pet.breed || "Not specified"}
+          </p>
+          <p className="text-gray-600">
+            Age: {pet.age || "Unknown"} years
+          </p>
+          <p className="text-gray-600">
+            Owner: {pet.ownerEmail || "Not specified"}
+          </p>
         </div>
-      ) : (
-        <NoUser />
-      )}
+
+        <div className="p-6">
+          <h2 className="text-2xl font-bold mb-6">Adoption Form</h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            <input
+              value={pet.petName || ""}
+              readOnly
+              className="w-full p-3 border rounded-lg bg-gray-100"
+            />
+
+            <input
+              value={pet.ownerEmail || ""}
+              readOnly
+              className="w-full p-3 border rounded-lg bg-gray-100"
+            />
+
+            <input
+              value={user.name || ""}
+              readOnly
+              className="w-full p-3 border rounded-lg bg-gray-100"
+            />
+
+            <input
+              value={user.email || ""}
+              readOnly
+              className="w-full p-3 border rounded-lg bg-gray-100"
+            />
+
+            <input
+              type="date"
+              name="pickupDate"
+              value={formData.pickupDate}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+              min={new Date().toISOString().split("T")[0]}
+              required
+            />
+
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg"
+              placeholder="Why do you want to adopt?"
+              rows="3"
+            />
+
+            {submitError && (
+              <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+                {submitError}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="w-full mt-6 bg-gradient-to-r from-green-600 to-blue-600 text-white font-bold p-3 rounded-lg disabled:opacity-50"
+            >
+              {submitting ? "Submitting..." : "Confirm Adoption"}
+            </Button>
+
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

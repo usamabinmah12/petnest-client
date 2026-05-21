@@ -26,7 +26,7 @@ export default function AddPetModal({ isOpen, onOpenChange, userEmail }) {
 
     const formData = await new FormData(e.currentTarget);
     const petData = await Object.fromEntries(formData.entries());
-    const res = await fetch('http://localhost:5000/pets',
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets`,
             {
                 method: "POST",
                 headers: {

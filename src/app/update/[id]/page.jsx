@@ -19,7 +19,7 @@ const UpdatePage = () => {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:5000/pets/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch pet");
         return res.json();
@@ -38,9 +38,10 @@ const UpdatePage = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const { _id, ...updateData } = pet;
+    const { petName, breed, age, image, location } = pet;
+    const updateData = { petName, breed, age, image, location };
 
-    const res = await fetch(`http://localhost:5000/update/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update/${id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",

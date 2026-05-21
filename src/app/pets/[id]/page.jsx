@@ -1,14 +1,37 @@
 import { Card, Button, Badge } from "@heroui/react";
 import Image from "next/image";
+// import { auth } from "@/lib/auth";
+import { cookies, headers } from 'next/headers';
+import { auth } from "@/lib/auth";
+import Link from "next/link";
 
 const IdPage = async ({ params }) => {
-  const { id } =await  params;
+  const { id } = await params;
 
-  const res = await fetch(`http://localhost:5000/pets/${id}`, {
-    cache: "no-store",
+  let token = null;
+  try {
+    const nextHeaders = await headers();
+    const tokenData = await auth.api.getToken({
+      headers: nextHeaders
+    });
+    console.log("tokenData:", tokenData);
+    token = tokenData?.token;
+  } catch (err) {
+    console.error("Error fetching token:", err);
+  }
+
+  console.log("Extracted token:", token ? "Found" : "Not Found");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
+    //  cache: "no-store",
+    headers: token ? {
+      authorization: `Bearer ${token}`
+    } : {}
   });
 
   const pet = await res.json();
+  const handleClick = () => {
+
+  }
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-50 p-6">
@@ -79,17 +102,24 @@ const IdPage = async ({ params }) => {
         <div className="text-sm text-gray-500">
           Owner: {pet.ownerEmail}
         </div>
-
-        <Button 
-          color="primary" 
-          className="w-full md:w-1/2" 
-          disabled={pet.isAdopted}
-          isDisabled={pet.isAdopted}
-          as="a"
-          href={pet.isAdopted ? undefined : `/adopt/${pet._id}`}
+       {pet.isAdopted ? (
+        <Button
+          color="primary"
+          className="w-full md:w-1/2"
+          isDisabled
         >
-          {pet.isAdopted ? "Already Adopted" : "Adopt Now"}
+          Already Adopted
         </Button>
+        ) : (
+        <Link href={`/adopt/${pet._id}`} className="w-full md:w-1/2">
+          <Button
+            color="primary"
+            className="w-full"
+          >
+            Adopt Now
+          </Button>
+        </Link>
+)}
 
       </Card>
 

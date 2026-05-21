@@ -67,7 +67,7 @@ const Navbar = () => {
         <Dropdown>
           
           <Dropdown.Trigger>
-            <div className="font-bold">User</div>
+            <div className="font-bold">{user? "Hi "+ user.name : <div className="font-bold text-green-700">Login</div>}</div>
             <Avatar 
          
               name={isLoggedIn ? user.name : "User"} 

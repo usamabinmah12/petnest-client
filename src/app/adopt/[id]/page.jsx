@@ -85,7 +85,7 @@ export default function AdoptPage() {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-      // ✅ FIXED: correct endpoint
+     
       const updateResponse = await fetch(
         `${apiUrl}/update/${pet._id}`,
         {
@@ -103,7 +103,6 @@ export default function AdoptPage() {
 
       const updateResult = await updateResponse.json();
 
-      // ✅ FIXED: safe Mongo-style check
       if (!updateResponse.ok || !updateResult.success) {
         throw new Error(
           updateResult.error || "Failed to update pet status"

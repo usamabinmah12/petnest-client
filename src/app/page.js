@@ -8,8 +8,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets`);
-    const allPets = await res.json();
+    let allPets = [];
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets`, {
+            cache: 'no-store',
+        });
+        if (res.ok) {
+            allPets = await res.json();
+        }
+    } catch (error) {
+        console.error('Failed to fetch pets:', error.message);
+    }
     
   return (
     <div className="container mx-auto my-6">
@@ -33,7 +42,9 @@ export default async function Home() {
                         These lovely pets are waiting for their forever homes
                     </p>
                 </div>
-       <div className='container mx-auto grid grid-cols-3'>
+       {allPets.length > 0 ? (
+        <>
+        <div className='container mx-auto grid grid-cols-3'>
             {
                 allPets.slice(0,7).map(pet => <Pet
                 key={pet._id}
@@ -44,6 +55,12 @@ export default async function Home() {
         <div className="flex items-center justify-center">
           <Link href={"/pets"}> <Button>See all Pets</Button></Link>
         </div>
+        </>
+       ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">Unable to load pets right now. Please make sure the backend server is running.</p>
+        </div>
+       )}
         <WhyAdoptPets></WhyAdoptPets>
         <SuccessStories></SuccessStories>
         <PetCareTips></PetCareTips>

@@ -8,29 +8,33 @@ const MyPets = () => {
   const [pets, setPets] = useState([]);
   const { data: session } = useSession();
 
-  const userEmail = session?.user?.email;
-
   const fetchPets = async () => {
-    if (!userEmail) return;
+    const email = session?.user?.email;
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/dashboard/my-pets?email=${userEmail}`
-    );
+    if (!email) return;
 
-    const data = await res.json();
-    setPets(data);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/my-pets?email=${email}&t=${Date.now()}`
+      );
+
+      const data = await res.json();
+      setPets(data);
+    } catch (error) {
+      console.error("Error fetching pets:", error);
+    }
   };
 
   useEffect(() => {
-    if (userEmail) {
-      fetchPets();
-    }
-  }, [userEmail]);
+    if (!session?.user?.email) return;
+
+    fetchPets();
+  }, [session?.user?.email]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
 
-
+      
       {pets.map((pet) => (
         <Peti key={pet._id} pet={pet} onDelete={fetchPets} />
       ))}

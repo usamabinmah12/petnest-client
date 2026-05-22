@@ -3,6 +3,7 @@
 import Pet from '@/components/Pet';
 import React, { useEffect, useState } from 'react';
 import { Spinner } from "@heroui/react";
+import { authClient } from '@/lib/auth-client';
 
 const AllPets = () => {
     const [pets, setPets] = useState([]);
@@ -10,13 +11,17 @@ const AllPets = () => {
 
     const [search, setSearch] = useState("");
     const [species, setSpecies] = useState("all");
-
+    
+    
     useEffect(() => {
         const fetchPets = async () => {
+        
             try {
+                
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets`);
                 const data = await res.json();
                 setPets(data);
+               
             } catch (error) {
                 console.error("Error fetching pets:", error);
             } finally {

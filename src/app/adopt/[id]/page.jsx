@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@heroui/react";
 import NoUser from "@/components/NoUser";
 import { useSession } from "@/lib/auth-client";
+import { getTokenAction } from "@/app/actions";
 
 export default function AdoptPage() {
   const params = useParams();
@@ -33,8 +34,14 @@ export default function AdoptPage() {
 
   const fetchPetDetails = async () => {
     try {
+      const token = await getTokenAction();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/pets/${params.id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/pets/${params.id}`,
+        {
+          headers: token ? {
+            authorization: `Bearer ${token}`
+          } : {}
+        }
       );
 
       if (!response.ok) {
@@ -69,9 +76,16 @@ export default function AdoptPage() {
       return;
     }
 
+    if (!user?.email || !pet?._id) {
+      setSubmitError("User or pet data not loaded");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+      // ✅ FIXED: correct endpoint
       const updateResponse = await fetch(
         `${apiUrl}/update/${pet._id}`,
         {
@@ -89,6 +103,7 @@ export default function AdoptPage() {
 
       const updateResult = await updateResponse.json();
 
+      // ✅ FIXED: safe Mongo-style check
       if (!updateResponse.ok || !updateResult.success) {
         throw new Error(
           updateResult.error || "Failed to update pet status"
@@ -120,6 +135,7 @@ export default function AdoptPage() {
       setTimeout(() => {
         router.push("/pets");
       }, 2000);
+
     } catch (err) {
       console.error("Adoption error:", err);
       setSubmitError(err.message);

@@ -8,8 +8,9 @@ import { useState, useEffect } from "react";
 
 const Pet = ({ pet }) => {
   const [isAdopted, setIsAdopted] = useState(false);
-  const session = useSession();
+  const {data : session }= useSession();
   const user = session?.user;
+  console.log("user" , user)
   useEffect(() => {
   
     if (pet?.isAdopted === true || pet?.adoptionStatus === "adopted") {
@@ -41,9 +42,22 @@ const Pet = ({ pet }) => {
           </div>
 
           <div className="flex gap-3 mt-2">
-            <Link href={`/pets/${pet._id}`}>
-              <Button variant="danger-soft">See details</Button>
-            </Link>
+            {
+  user ? (
+    <Link href={`/pets/${pet._id}`}>
+      <Button variant="danger-soft">
+        See detail
+      </Button>
+    </Link>
+  ) : (
+    <Link href={`/pets/no-user`}>
+      <Button variant="danger-soft">
+        See detail
+      </Button>
+    </Link>
+  )
+}
+          
            {isAdopted ? <Button variant="danger">Already Adopted</Button> :<Link href={`/adopt/${pet._id}`}>
               <Button
                 disabled={isAdopted}

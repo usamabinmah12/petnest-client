@@ -97,8 +97,6 @@ const LoginPage = () => {
                         isRequired
                     />
 
-                   
-
                     <Input
                         name="password"
                         label="Password"

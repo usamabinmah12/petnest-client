@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Button } from "@heroui/react";
+import { getTokenAction } from "@/app/actions";
 
 const UpdatePage = () => {
   const { id } = useParams();
   const router = useRouter();
+  const formRef = useRef();
 
   const [pet, setPet] = useState({
     petName: "",
@@ -19,27 +22,41 @@ const UpdatePage = () => {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`)
+    getTokenAction().then((token) => {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
+        headers: token ? {
+          authorization: `Bearer ${token}`
+        } : {}
+      })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch pet");
         return res.json();
       })
-      .then((data) => setPet(data))
+      .then((data) => {
+        setPet({
+          petName: data?.petName || "",
+          breed: data?.breed || "",
+          age: data?.age || "",
+          image: data?.image || "",
+          location: data?.location || "",
+        });
+      })
       .catch((err) => console.error(err));
-  }, [id]);
-
-  const handleChange = (e) => {
-    setPet({
-      ...pet,
-      [e.target.name]: e.target.value,
     });
-  };
+  }, [id]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    const { petName, breed, age, image, location } = pet;
-    const updateData = { petName, breed, age, image, location };
+    const formData = new FormData(formRef.current);
+
+    const updateData = {
+      petName: formData.get("petName"),
+      breed: formData.get("breed"),
+      age: formData.get("age"),
+      image: formData.get("image"),
+      location: formData.get("location"),
+    };
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/update/${id}`, {
       method: "PUT",
@@ -56,107 +73,87 @@ const UpdatePage = () => {
 
     await res.json();
 
-    toast.success(`${pet.petName} information updated`);
+    toast.success(`${updateData.petName} information updated`);
 
     router.push("/dashboard/my-pets");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-pink-100 flex items-center justify-center p-6">
-
       <div className="w-full max-w-2xl bg-white shadow-2xl rounded-3xl p-8">
-
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold text-orange-500">
             Update Pet Information
           </h1>
-
           <p className="text-gray-500 mt-2">
             Edit your lovely pet details easily
           </p>
         </div>
 
+        {/* form */}
         <form
+          ref={formRef}
           onSubmit={handleUpdate}
           className="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
-
           <div className="flex flex-col gap-2">
-            <label className="font-semibold text-gray-700">
-              Pet Name
-            </label>
+            <label className="font-semibold text-gray-700">Pet Name</label>
             <input
               type="text"
               name="petName"
-              value={pet.petName}
-              onChange={handleChange}
+              defaultValue={pet.petName}
               className="border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none p-3 rounded-2xl transition"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold text-gray-700">
-              Breed
-            </label>
+            <label className="font-semibold text-gray-700">Breed</label>
             <input
               type="text"
               name="breed"
-              value={pet.breed}
-              onChange={handleChange}
+              defaultValue={pet.breed}
               className="border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none p-3 rounded-2xl transition"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold text-gray-700">
-              Age
-            </label>
+            <label className="font-semibold text-gray-700">Age</label>
             <input
               type="number"
               name="age"
-              value={pet.age}
-              onChange={handleChange}
+              defaultValue={pet.age}
               className="border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none p-3 rounded-2xl transition"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold text-gray-700">
-              Location
-            </label>
+            <label className="font-semibold text-gray-700">Location</label>
             <input
               type="text"
               name="location"
-              value={pet.location}
-              onChange={handleChange}
+              defaultValue={pet.location}
               className="border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none p-3 rounded-2xl transition"
             />
           </div>
 
           <div className="md:col-span-2 flex flex-col gap-2">
-            <label className="font-semibold text-gray-700">
-              Image URL
-            </label>
+            <label className="font-semibold text-gray-700">Image URL</label>
             <input
               type="text"
               name="image"
-              value={pet.image}
-              onChange={handleChange}
+              defaultValue={pet.image}
               className="border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none p-3 rounded-2xl transition"
             />
           </div>
 
-          <button
+          <Button
             type="submit"
             className="md:col-span-2 bg-gradient-to-r from-orange-500 to-pink-500 hover:scale-[1.02] transition text-white font-bold py-4 rounded-2xl shadow-lg"
           >
             Update Pet
-          </button>
-
+          </Button>
         </form>
-
       </div>
-
     </div>
   );
 };

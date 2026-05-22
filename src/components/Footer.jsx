@@ -83,17 +83,17 @@ const Footer = () => {
                                 Opening Hours
                             </h3>
                             <ul className="space-y-3 text-gray-400">
-                                <li className="flex justify-between">
+                                <li className="flex gap-3">
                                     <span>Monday - Friday:</span>
-                                    <span className="text-white">9:00 AM - 8:00 PM</span>
+                                    <span className="text-black">9:00 AM - 8:00 PM</span>
                                 </li>
-                                <li className="flex justify-between">
+                                <li className="flex gap-3">
                                     <span>Saturday:</span>
-                                    <span className="text-white">10:00 AM - 6:00 PM</span>
+                                    <span className="text-black">10:00 AM - 6:00 PM</span>
                                 </li>
-                                <li className="flex justify-between">
+                                <li className="flex gap-3">
                                     <span>Sunday:</span>
-                                    <span className="text-white">10:00 AM - 4:00 PM</span>
+                                    <span className="text-black">10:00 AM - 4:00 PM</span>
                                 </li>
                             </ul>
                         </div>

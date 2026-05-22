@@ -96,11 +96,6 @@ const Navbar = () => {
                     </Link>
                   </Dropdown.Item>
 
-                  <Dropdown.Item id="profile" textValue="Profile">
-                    <Link href="/profile" className="block w-full">
-                      <Label>Profile</Label>
-                    </Link>
-                  </Dropdown.Item>
                 </>
               )}
 

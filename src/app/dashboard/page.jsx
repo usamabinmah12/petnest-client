@@ -33,9 +33,7 @@ const DashboardPage = () => {
             My Pets
           </Link>
 
-          <Link href="/dashboard/adoptions">
-            Adoptions
-          </Link>
+          
 
         </div>
 

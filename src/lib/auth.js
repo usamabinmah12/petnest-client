@@ -20,6 +20,13 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_SECRET , 
         }, 
     },
+    trustedOrigins: process.env.VERCEL_URL ? [process.env.BETTER_AUTH_URL, `https://${process.env.VERCEL_URL}`].filter(Boolean) : undefined,
+    advanced: {
+      defaultCookieAttributes: {
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production"
+      }
+    },
     session : {
       cookieCache: {
         enabled:true,

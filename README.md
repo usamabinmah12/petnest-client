@@ -1,65 +1,83 @@
 # 🐾 PetNest - Pet Management App
 
-## 📖 Project Overview
+🔗 **Client Live:** [https://petnest-client-rho.vercel.app](https://petnest-client-rho.vercel.app)  
+🔗 **Server Live:** [https://petnest-server-beige.vercel.app](https://petnest-server-beige.vercel.app)  
 
-**PetNest** is a modern pet management application that allows users to efficiently manage and update pet information. Users can add pet details, modify existing records, and maintain organized pet data through a clean and responsive interface.
+---
 
-## 🌐 Live Links
+## Part 1: 📖 Project Overview & Technologies
 
-* **Client:** https://petnest-client-rho.vercel.app
-* **Server:** https://petnest-server-beige.vercel.app
+### Project Overview
+**PetNest** is a modern full-stack pet management application that allows users to store, update, and manage pet information efficiently. Users can add pet details like name, breed, age, location, and image, making pet record management simple and organized.
 
-## ✨ Key Features
+### Technologies Used
+- **Next.js** – React framework for server-side rendering and routing  
+- **React** – Frontend library for building user interfaces  
+- **Tailwind CSS** – Utility-first CSS framework for styling  
+- **MongoDB** – NoSQL database for storing pet records  
+- **Better Auth** – Authentication library for secure login and registration  
 
-### 🐶 Pet Information Management
+### Dependencies
+- `next`
+- `react`
+- `react-dom`
+- `mongodb`
+- `better-auth`
+- `@heroui/react`
+- `react-hot-toast`
+- `tailwindcss`
+- `lucide-react`
+- `react-icons`
 
-Add, view, and update pet details including name, breed, age, location, and image.
+---
 
-### 🔔 Real-Time Notifications
+## Part 2: ✨ Key Features & Purpose
 
-Receive instant feedback for user actions through toast notifications, improving the overall user experience.
+### Key Features
 
-### 📱 Responsive Design
+#### 🐶 Pet Management System
+Add, update, and manage pet details including name, breed, age, location, and images.
 
-Built with Tailwind CSS and HeroUI to provide a seamless experience across desktop, tablet, and mobile devices.
+#### 🔐 Authentication System
+Secure login and registration using Better Auth.
 
-### 🔄 Dynamic Routing
+#### 🔔 Real-Time Feedback
+Toast notifications for user actions like add, update, and delete.
 
-Navigate to individual pet update pages using dynamic routes for efficient data management.
+#### 📱 Responsive UI
+Fully responsive design using Tailwind CSS and HeroUI components.
 
-### 🎨 Modern User Interface
+#### 🔄 Dynamic Routing
+Individual pet update pages using Next.js routing.
 
-Clean and intuitive UI powered by HeroUI components for a professional user experience.
+### Purpose
+PetNest is built to simplify pet data management with authentication, dynamic routing, and a clean modern UI experience.
 
-## 🚀 Technologies Used
+---
 
-* Next.js
-* React
-* Tailwind CSS
-* HeroUI
-* MongoDB
-* Better Auth
-* React Hot Toast
-* Lucide Icons
-* React Icons
+## Part 3: ⚙️ How to Run Locally & Setup
 
-## 📦 NPM Packages Used
+### Prerequisites
+- Node.js (v14 or later)
+- MongoDB (local or cloud instance)
+- npm or yarn package manager
+
+### Installation Steps
 
 ```bash
-next
-react
-react-dom
-@heroui/react
-react-hot-toast
-tailwindcss
-jose-cjs
-lucide
-react-icons
-mongodb
-mongodb-adapter
-better-auth
-```
+# 1. Clone the repository
+git clone https://github.com/your-username/petnest.git
 
-## 🎯 Purpose
+# 2. Navigate into the project directory
+cd petnest
 
-PetNest simplifies pet record management by providing an easy-to-use platform where users can securely store, update, and organize pet information while enjoying a modern and responsive user experience.
+# 3. Install dependencies
+npm install
+
+# 4. Set up environment variables
+# Create a .env.local file in the root directory and add:
+# MONGODB_URI=your_mongodb_connection_string
+# BETTER_AUTH_SECRET=your_auth_secret
+
+# 5. Run the development server
+npm run dev
